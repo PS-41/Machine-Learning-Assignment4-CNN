@@ -1,0 +1,326 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+\geometry{margin=1in}
+
+\title{CSCE 633 - Homework 4 Solution}
+\author{Prakhar Suryavansh}
+\date{} % This will remove the date
+
+\begin{document}
+
+\maketitle
+
+\section*{Question 1: Convolution Operation}
+
+\subsection*{Input Matrix and Filter}
+The input matrix \(X\) and the filter \(F\) are as follows:
+
+\[
+  X = \begin{bmatrix}
+    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 2 & 4 & 1 & 0 & 0 \\
+    0 & 3 & 1 & 1 & 0 & 1 & 0 \\
+    0 & 2 & 4 & 1 & 0 & 1 & 0 \\
+    0 & 2 & 0 & 5 & 2 & 2 & 0 \\
+    0 & 0 & 1 & 3 & 2 & 1 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+  \end{bmatrix}
+\]
+
+\[
+  F = \begin{bmatrix}
+    1 & 0 & -1 \\
+    1 & 0 & -1 \\
+    1 & 0 & -1 \\
+  \end{bmatrix}
+\]
+
+\subsection*{1. Convolution without Max Pooling and with Stride = 1}
+
+For stride 1 without max pooling, we slide the filter over each possible position in the input matrix, compute element-wise multiplication, and sum the results.
+
+\subsubsection*{Calculations for Each Position:}
+We show the calculations for some positions and others are calculated similarly to obtain the final output after using the convolution operation on the matrix using the 3x3 filter.
+
+1. Position (1,1):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & 2 \\ 0 & 3 & 1 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -2 \\ 0 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 0 + 0 - 2 + 0 + 0 - 1 = -3
+\]
+
+2. Position (1,2):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 0 & 2 & 4 \\ 3 & 1 & 1 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -4 \\ 3 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 0 + 0 - 4 + 3 + 0 - 1 = -2
+\]
+
+3. Position (1,3):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 2 & 4 & 1 \\ 1 & 1 & 0 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 2 & 0 & -1 \\ 1 & 0 & 0 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 2 + 0 - 1 + 1 + 0 + 0 = 2
+\]
+
+4. Position (1,4):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 4 & 1 & 0 \\ 1 & 0 & 1 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 4 & 0 & 0 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 4 + 0 + 0 + 1 + 0 - 1 = 4
+\]
+
+5. Position (1,5):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & 0 \\ 0 & 1 & 1 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 1 + 0 + 0 + 0 + 0 + 0 = 1
+\]
+
+Continuing in this way for all positions, after applying the filter with stride = 1 and before taking the sum of values in each position, we get:
+
+\[
+  \begin{bmatrix}
+    \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -2 \\ 0 & 0 & -1 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -4 \\ 3 & 0 & -1 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & 0 \\ 2 & 0 & -1 \\ 1 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & 0 \\ 4 & 0 & 0 \\ 1 & 0 & -1 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}   \\
+
+    \begin{bmatrix} 0 & 0 & -2 \\ 0 & 0 & -1 \\ 0 & 0 & -4 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & -4 \\ 3 & 0 & -1 \\ 2 & 0 & -1 \end{bmatrix} &
+    \begin{bmatrix} 2 & 0 & -1 \\ 1 & 0 & 0 \\ 4 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 4 & 0 & 0 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix} &
+    \begin{bmatrix} 1 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}   \\
+
+    \begin{bmatrix} 0 & 0 & -1 \\ 0 & 0 & -4 \\ 0 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 3 & 0 & -1 \\ 2 & 0 & -1 \\ 2 & 0 & -5 \end{bmatrix} &
+    \begin{bmatrix} 1 & 0 & 0 \\ 4 & 0 & 0 \\ 0 & 0 & -2 \end{bmatrix} &
+    \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 5 & 0 & -2 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & 0 \\ 2 & 0 & 0 \end{bmatrix}   \\
+
+    \begin{bmatrix} 0 & 0 & -4 \\ 0 & 0 & 0 \\ 0 & 0 & -1 \end{bmatrix} &
+    \begin{bmatrix} 2 & 0 & -1 \\ 2 & 0 & -5 \\ 0 & 0 & -3 \end{bmatrix} &
+    \begin{bmatrix} 4 & 0 & 0 \\ 0 & 0 & -2 \\ 1 & 0 & -2 \end{bmatrix} &
+    \begin{bmatrix} 1 & 0 & -1 \\ 5 & 0 & -2 \\ 3 & 0 & -1 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & 0 \\ 2 & 0 & 0 \\ 2 & 0 & 0 \end{bmatrix}   \\
+
+    \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -1 \\ 0 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 2 & 0 & -5 \\ 0 & 0 & -3 \\ 0 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & -2 \\ 1 & 0 & -2 \\ 0 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 5 & 0 & -2 \\ 3 & 0 & -1 \\ 0 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 2 & 0 & 0 \\ 2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}   \\
+  \end{bmatrix}
+\]
+
+Taking some of values for matrices at each position, we get the output matrix:
+
+\[
+  \textbf{Output}_{\textbf{stride=1}} =
+  \begin{bmatrix}
+    -3 & -2 & 2  & 4 & 1 \\
+    -7 & -1 & 6  & 4 & 1 \\
+    -5 & 0  & 3  & 3 & 2 \\
+    -5 & -5 & 1  & 5 & 4 \\
+    -1 & -6 & -3 & 5 & 4 \\
+  \end{bmatrix}
+\]
+
+\subsection*{2. Convolution without Max Pooling and with Stride = 2}
+
+For stride 2, we slide the filter two elements at a time over the entire matrix, resulting in a 3x3 output matrix.
+
+\subsubsection*{Calculations for Each Position:}
+We show the calculation for each position with stride = 2:
+
+1. Position (1,1):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & 2 \\ 0 & 3 & 1 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -2 \\ 0 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 0 + 0 - 2 + 0 + 0 - 1 = -3
+\]
+
+2. Position (1,2):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 2 & 4 & 1 \\ 1 & 1 & 0 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 2 & 0 & -1 \\ 1 & 0 & 0 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 2 + 0 - 1 + 1 + 0 + 0 = 2
+\]
+
+3. Position (1,3):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 1 + 0 + 0 + 0 + 0 + 0 = 1
+\]
+
+4. Position (2,1):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 3 & 1 \\ 0 & 2 & 4 \\ 0 & 2 & 0 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & -1 \\ 0 & 0 & -4 \\ 0 & 0 & 0 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 - 1 + 0 + 0 - 4 + 0 + 0 + 0 = -5
+\]
+
+5. Position (2,2):
+\[
+  \text{Region:} \quad \begin{bmatrix} 1 & 1 & 0 \\ 4 & 1 & 0 \\ 0 & 5 & 2 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 1 & 0 & 0 \\ 4 & 0 & 0 \\ 0 & 0 & -2 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 1 + 0 + 0 + 4 + 0 + 0 + 0 + 0 - 2 = 3
+\]
+
+6. Position (2,3):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 1 & 0 \\ 0 & 1 & 0 \\ 2 & 2 & 0 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & 0 \\ 2 & 0 & 0 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 0 + 0 + 0 + 2 + 0 + 0 = 2
+\]
+
+7. Position (3,1):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 2 & 0 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -1 \\ 0 & 0 & 0 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 + 0 + 0 + 0 - 1 + 0 + 0 + 0 = -1
+\]
+
+8. Position (3,2):
+\[
+  \text{Region:} \quad \begin{bmatrix} 0 & 5 & 2 \\ 1 & 3 & 2 \\ 0 & 0 & 0 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 0 & 0 & -2 \\ 1 & 0 & -2 \\ 0 & 0 & 0 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 0 + 0 - 2 + 1 + 0 - 2 + 0 + 0 + 0 = -3
+\]
+
+9. Position (3,3):
+\[
+  \text{Region:} \quad \begin{bmatrix} 2 & 2 & 0 \\ 2 & 1 & 0 \\ 0 & 0 & 0 \end{bmatrix} \quad \text{Filter:} \quad \begin{bmatrix} 1 & 0 & -1 \\ 1 & 0 & -1 \\ 1 & 0 & -1 \end{bmatrix}
+\]
+\[
+  \text{Element-wise Multiplication:} \quad \begin{bmatrix} 2 & 0 & 0 \\ 2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}
+\]
+\[
+  \text{Sum:} \quad 2 + 0 + 0 + 2 + 0 + 0 + 0 + 0 + 0 = 4
+\]
+
+So, after applying the filter with stride = 2 and before taking the sum of values in each position, we get
+
+\[
+  \begin{bmatrix}
+    \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -2 \\ 0 & 0 & -1 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & 0 \\ 2 & 0 & -1 \\ 1 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}   \\
+
+    \begin{bmatrix} 0 & 0 & -1 \\ 0 & 0 & -4 \\ 0 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 1 & 0 & 0 \\ 4 & 0 & 0 \\ 0 & 0 & -2 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & 0 \\ 2 & 0 & 0 \end{bmatrix}   \\
+
+    \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -1 \\ 0 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 0 & 0 & -2 \\ 1 & 0 & -2 \\ 0 & 0 & 0 \end{bmatrix} &
+    \begin{bmatrix} 2 & 0 & 0 \\ 2 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}   \\
+  \end{bmatrix}
+\]
+
+Taking sum of values for matrices at each position, we get the output matrix:
+
+\[
+  \textbf{Output}_{\textbf{stride=2}} =
+  \begin{bmatrix}
+    -3 & 2  & 1 \\
+    -5 & 3  & 2 \\
+    -1 & -3 & 4 \\
+  \end{bmatrix}
+\]
+
+
+\subsection*{3. Convolution with Max Pooling and with Stride = 1}
+We have already calculated our output matrix after perfomring the convolution with stride = 1 in part (1) which is shown below:
+
+\[
+  \text{Output}_{\text{stride=1}} =
+  \begin{bmatrix}
+    -3 & -2 & 2  & 4 & 1 \\
+    -7 & -1 & 6  & 4 & 1 \\
+    -5 & 0  & 3  & 3 & 2 \\
+    -5 & -5 & 1  & 5 & 4 \\
+    -1 & -6 & -3 & 5 & 4 \\
+  \end{bmatrix}
+\]
+
+Now, performing max pooling with a pool size 3x3 and stride = 2 as given in the question:
+
+\[
+  \begin{bmatrix}
+    \begin{bmatrix} -3 & -2 & 2 \\ -7 & -1 & 6 \\ -5 & 0 & 3 \end{bmatrix} & \rightarrow \text{Max: } 6 &
+    \begin{bmatrix} 2 & 4 & 1 \\ 6 & 4 & 1 \\ 3 & 3 & 2 \end{bmatrix} & \rightarrow \text{Max: } 6   \\
+    \\
+    \begin{bmatrix} -5 & 0 & 3 \\ -5 & -5 & 1 \\ -1 & -6 & -3 \end{bmatrix} & \rightarrow \text{Max: } 3 &
+    \begin{bmatrix} 3 & 3 & 2 \\ 1 & 5 & 4 \\ -3 & 5 & 4 \end{bmatrix} & \rightarrow \text{Max: } 5   \\
+  \end{bmatrix}
+\]
+
+Thus, the final output matrix after max pooling is:
+
+\[
+  \textbf{Output}_{\textbf{Max Pooling}} =
+  \begin{bmatrix}
+    6 & 6 \\
+    3 & 5 \\
+  \end{bmatrix}
+\]
+
+
+\end{document}

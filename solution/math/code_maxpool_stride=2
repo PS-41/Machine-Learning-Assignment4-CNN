@@ -1,0 +1,49 @@
+import numpy as np
+
+# Define the input matrix X and the filter F
+X = np.array([
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 2, 4, 1, 0, 0],
+    [0, 3, 1, 1, 0, 1, 0],
+    [0, 2, 4, 1, 0, 1, 0],
+    [0, 2, 0, 5, 2, 2, 0],
+    [0, 0, 1, 3, 2, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0]
+])
+
+F = np.array([
+    [1, 0, -1],
+    [1, 0, -1],
+    [1, 0, -1]
+])
+
+# Perform convolution with stride 1
+X_dim = X.shape[0]
+F_dim = F.shape[0]
+conv_stride = 1
+conv_output_dim = X_dim - F_dim + 1
+conv_output = np.zeros((conv_output_dim, conv_output_dim))
+
+for i in range(conv_output_dim):
+    for j in range(conv_output_dim):
+        region = X[i:i+F_dim, j:j+F_dim]
+        conv_output[i, j] = np.sum(region * F)
+
+print("Convolution Output Matrix:")
+print(conv_output)
+print("\n")
+
+# Apply max pooling with a 3x3 pool size and stride of 2
+pool_size = 3
+pool_stride = 2
+pool_output_dim = (conv_output_dim - pool_size) // pool_stride + 1
+pool_output = np.zeros((pool_output_dim, pool_output_dim))
+
+for i in range(pool_output_dim):
+    for j in range(pool_output_dim):
+        pool_region = conv_output[i*pool_stride:i*pool_stride+pool_size, j*pool_stride:j*pool_stride+pool_size]
+        pool_output[i, j] = np.max(pool_region)
+        print(pool_region)
+
+print("Output Matrix after Max Pooling:")
+print(pool_output)
