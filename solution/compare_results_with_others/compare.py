@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Load the prediction files
-preds_user = pd.read_csv("Gourangi_predictions.csv")
-preds_friend = pd.read_csv("Dipanwita_Rano_HW4.csv")
+preds_user = pd.read_csv("Prakhar_Suryavansh_preds.csv")
+preds_friend = pd.read_csv("Gourangi_predictions.csv")
 
 # Check if the number of rows is the same
 if len(preds_user) != len(preds_friend):
